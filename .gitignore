@@ -1,0 +1,4 @@
+.venv/
+
+# Cosas relacionadas a node
+/node_modules
