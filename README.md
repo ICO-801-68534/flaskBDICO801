@@ -22,3 +22,11 @@ En MAC os y linux
 ```
 venv/bin/activate
 ```
+
+3. Instalar las dependencias de node
+```
+npm install
+```
+
+Si no tienes instalado nodejs, puedes instalarlo desde 
+https://nodejs.org/en
