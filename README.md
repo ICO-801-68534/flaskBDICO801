@@ -7,6 +7,7 @@ En MAC os y Linux
 python3 -m venv .venv
 ```
 
+En windows
 ```
 python -m venv .venv
 ```
