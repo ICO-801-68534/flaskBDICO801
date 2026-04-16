@@ -2,13 +2,12 @@ from flask import render_template, request, redirect, url_for, flash
 from sqlalchemy.exc import IntegrityError
 from models import db, Alumnos
 import forms
-from alumnos import alumnos_bp # Importamos el Blueprint
+from alumnos import alumnos_bp
 
 @alumnos_bp.route("/alumnos", methods=["GET", "POST"])
 def vista_alumnos(): 
     create_form = forms.UserForm(request.form)
     lista_alumnos = Alumnos.query.all()
-    # Asegúrate de que el HTML se llame alumnos.html dentro de la carpeta alumnos
     return render_template("alumnos/alumnos.html", form=create_form, alumno=lista_alumnos)
 
 @alumnos_bp.route("/insertar_alumno", methods=["GET", "POST"])
@@ -18,7 +17,7 @@ def insertar_alumno():
     if request.method == "POST":
         try:
             alum = Alumnos(
-                id=create_form.id.data, # Esta es la matrícula que validaremos
+                id=create_form.id.data,
                 nombre=create_form.nombre.data,
                 amaterno=create_form.amaterno.data,
                 apaterno=create_form.apaterno.data,
@@ -30,7 +29,6 @@ def insertar_alumno():
             return redirect(url_for("alumnos.vista_alumnos"))
             
         except IntegrityError:
-            # ¡AQUÍ ESTÁ LA VALIDACIÓN DE MATRÍCULA REPETIDA!
             db.session.rollback()
             flash("Esta matrícula ya existe, cámbiala", "error")
             
@@ -73,12 +71,10 @@ def modificar():
         create_form.correo.data = alum1.correo
 
     if request.method == "POST":
-        # Este es el ID original con el que entramos a editar
         id = request.args.get("id")
         alum1 = db.session.query(Alumnos).filter(Alumnos.id == id).first()
         
         try:
-            # Aquí está el truco: le asignamos el NUEVO id que viene del formulario
             alum1.id = create_form.id.data
             alum1.nombre = create_form.nombre.data
             alum1.apaterno = create_form.apaterno.data
@@ -91,7 +87,6 @@ def modificar():
             return redirect(url_for("alumnos.vista_alumnos"))
             
         except IntegrityError:
-            # Si choca con una matrícula que ya existe, cancelamos y mandamos alerta
             db.session.rollback()
             flash("Esa matrícula ya está en uso por otro alumno, elige otra.", "error")
     
@@ -119,14 +114,8 @@ def eliminar():
     
     return render_template("alumnos/eliminar.html", form=create_form)
 
-# =========================================================
-# LO NUEVO: CONSULTA REQUERIDA EN EL DOCUMENTO
-# =========================================================
 @alumnos_bp.route("/cursos_alumno", methods=["GET"])
 def cursos_alumno():
-    # Usamos tu mismo estilo para jalar el ID
     id = request.args.get("id")
     alumno = db.session.query(Alumnos).filter(Alumnos.id == id).first()
-    
-    # Le pasamos el alumno al template, el HTML se encargará de mostrar alumno.cursos
     return render_template("alumnos/cursos_inscritos.html", alumno=alumno)

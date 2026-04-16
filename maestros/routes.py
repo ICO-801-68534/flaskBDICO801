@@ -23,12 +23,10 @@ def registrar():
             )
             db.session.add(nuevo)
             db.session.commit()
-            # Añadimos un mensaje de éxito
             flash("Maestro registrado correctamente.", "success")
             return redirect(url_for('maestros.maestros'))
         except IntegrityError:
             db.session.rollback()
-            # Cambiamos el texto plano por un flash danger
             flash("Error: La matrícula o el correo ya existen.", "danger")
             
     return render_template("maestros/registrar_maestro.html", form=form)
@@ -50,7 +48,6 @@ def modificar(id):
             return redirect(url_for('maestros.maestros'))
         except Exception as e:
             db.session.rollback()
-            # Cambiamos el texto plano por un flash danger
             flash(f"Error al actualizar: {e}", "danger")
             
     return render_template("maestros/editar_maestro.html", form=form, maestro=maestre)
@@ -65,11 +62,9 @@ def eliminar(id):
     maestre = Maestros.query.get_or_404(id)
     form = forms.MaestroForm(obj=maestre)
     
-    # 1. Obtenemos LOS CURSOS en sí, no solo el número
     cursos_conflictivos = maestre.cursos 
 
     if request.method == 'POST':
-        # 2. Validamos la cantidad. Si es mayor a 0, bloqueamos.
         if len(cursos_conflictivos) > 0:
             flash(f"Este maestro tiene {len(cursos_conflictivos)} curso(s). Reasigna los cursos a otro maestro o bórralos antes de continuar.", "warning")
             return redirect(url_for('maestros.maestros'))
@@ -84,5 +79,4 @@ def eliminar(id):
             flash("Error de base de datos al intentar eliminar.", "danger")
             return redirect(url_for('maestros.maestros'))
     
-    # 3. Pasamos 'cursos=cursos_conflictivos' al HTML
     return render_template("maestros/eliminar_maestro.html", maestro=maestre, form=form, cursos=cursos_conflictivos)

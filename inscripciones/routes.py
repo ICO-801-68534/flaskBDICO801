@@ -7,16 +7,13 @@ import forms
 def inscribir_alumno():
     form = forms.InscripcionForm(request.form)
     
-    # Llenamos las listas desplegables directo de la BD
     form.alumno_id.choices = [(a.id, f"{a.nombre} {a.apaterno}") for a in Alumnos.query.all()]
     form.curso_id.choices = [(c.id, c.nombre) for c in Curso.query.all()]
 
     if request.method == "POST" and form.validate():
-        # Jalamos los objetos reales de la base de datos
         alumno = Alumnos.query.get(form.alumno_id.data)
         curso = Curso.query.get(form.curso_id.data)
         
-        # AQUÍ ESTÁ EL .APPEND (Validamos que no esté inscrito ya)
         if alumno not in curso.alumnos:
             curso.alumnos.append(alumno)
             db.session.commit()
