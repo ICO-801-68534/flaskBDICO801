@@ -2,6 +2,7 @@
 
 1. Clonar el repositorio
 2. Crear un entorno virtual
+<br>
 En Windows
 ```
 python -m venv .venv
