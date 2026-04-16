@@ -10,6 +10,10 @@ from alumnos import alumnos_bp
 from cursos import cursos_bp
 from inscripciones import ins_bp
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__)  
 app.config.from_object(DevelopmentConfig)
 db.init_app(app)
