@@ -21,7 +21,9 @@ pip install -r requirements.txt
 node install
 ```
 
-5. Ejecutar el proyecto
+5. Renombrar el archivo ```env.template``` a ```.env``` y ponerle sus valores
+
+6. Ejecutar el proyecto
 ```
 python app.py
 ```
